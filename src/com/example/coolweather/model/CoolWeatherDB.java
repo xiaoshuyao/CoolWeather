@@ -51,7 +51,7 @@ public class CoolWeatherDB {
 	//从数据库都去全国省份信息
 	public List<Province> loadProvinces(){
 		List<Province> list=new ArrayList<Province>(); 
-		 //??              //??
+		 //??              //1 表名参数2 null表示查询所有列 参3查询条件 参4对查询条件赋值null(按顺序) 5语法have 6排序方式
 		Cursor cursor=db.query("Province", null, null, null, null, null, null);
 		           //??
 		if(cursor.moveToFirst()){
@@ -69,10 +69,67 @@ public class CoolWeatherDB {
 	}
 	public void saveCity(City city){
 		if(city!=null){
-			
+			ContentValues values=new ContentValues();
+			values.put("city_name", city.getCityName());
+			values.put("city_code", city.getCityCode());
+			values.put("province_id", city.getProvinceId());
+            db.insert("City", null, values); //可以返回新天记录的行号			
+			                //??
+		}
+		
+	}
+	
+	public List<City> loadCities(int provinceId){
+		List<City> list=new ArrayList<City>(); 
+		 //??              //??                                            //将int变量转换成字符串
+		Cursor cursor=db.query("City", null,"province_id=?", new String[] {String.valueOf(provinceId)}, null, null, null);
+		           //??
+		if(cursor.moveToFirst()){
+			do{
+				City city=new City();
+				                     //??
+				city.setId(cursor.getInt(cursor.getColumnIndex("id")));
+				city.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
+				city.setCityCode(cursor.getString(cursor.getColumnIndex("city_code")));
+				city.setProvinceId(provinceId);
+				list.add(city);
+				      //???
+			}  while(cursor.moveToNext());
+		}
+		return list;	
+	}
+	//将County实例存储到数据库
+	public void County(County county) {
+		if(county !=null){
+			ContentValues values=new ContentValues();
+			values.put("county_name", county.getcountyName());
+			values.put("county_code", county.getcountyCode());
+			values.put("county_id", county.getCityId());
+			db.insert("County", null, values);
 			
 		}
 		
 	}
+	//从数据库都去某个城市下县区信息
+	public List<County> loadCounties(int cityId){
+		List<County> list=new ArrayList<County>(); 
+		 //??              //??                                            //将int变量转换成字符串
+		Cursor cursor=db.query("Couny", null,"city_id=?", new String[] {String.valueOf(cityId)}, null, null, null);
+		           //??
+		if(cursor.moveToFirst()){
+			do{
+				County county=new County();
+				                     //??
+				county.setId(cursor.getInt(cursor.getColumnIndex("id")));
+				county.setcountyName(cursor.getString(cursor.getColumnIndex("county_name")));
+				county.setcountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
+				county.setCityId(cityId);
+				list.add(county);
+				      //???
+			}  while(cursor.moveToNext());
+		}
+		return list;	
+	}
+	
 	
 }
