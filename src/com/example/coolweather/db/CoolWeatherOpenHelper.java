@@ -8,7 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class CoolWeatherOpenHelper extends SQLiteOpenHelper {
 
 	
-	public static final String CREATE_PROVINCE="create table Province(id integer primary key autoincrement,"
+	public static final String CREATE_PROVINCE="create table Province("+
+	"id integer primary key autoincrement,"
 			                   +"province_name text,province_code text)";
 	
 	public static final String CREATE_CITY="create table City(id integer primary key autoincrement,"
@@ -31,7 +32,7 @@ public class CoolWeatherOpenHelper extends SQLiteOpenHelper {
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
 		
 	}
