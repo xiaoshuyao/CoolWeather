@@ -11,8 +11,10 @@ import android.drm.DrmManagerClient.OnErrorListener;
 
 public class HttpUtil {
 
+	
 	public static void sendHttpRequst(final String address,final HttpCallbackListener listener){
-		new Thread(new Runnable() {
+	
+		new Thread(new Runnable() {  //开启子线程 但子线程内无法return返回数据
 			
 			@Override
 			public void run() {
@@ -22,19 +24,24 @@ public class HttpUtil {
 				try{
 				URL url=new URL(address);
 				connection=(HttpURLConnection) url.openConnection();
-				connection.setRequestMethod("GET");
+				connection.setRequestMethod("POST");
 				connection.setConnectTimeout(8000);
 				connection.setReadTimeout(8000);
+				connection.setDoInput(true);
+				connection.setDoOutput(true);
 				
 				InputStream in=connection.getInputStream();
-				
-				BufferedReader reader=new BufferedReader(new InputStreamReader(in));
-				String line;
 				//response 对象??？
 				StringBuilder response=new StringBuilder();  
+				
+				
+				BufferedReader reader=new BufferedReader(new InputStreamReader(in, "UTF-8"));
+				String line;
 				while((line=reader.readLine())!=null){
 					response.append(line);
+					//response.append("\r\n");
 				}
+				reader.close();
 				if(listener!=null){
 					//回调onFinish方法
 					listener.onFinish(response.toString());
@@ -52,6 +59,6 @@ public class HttpUtil {
 		  }
 		}).start();
 		
-		
 	}
+	
 }
